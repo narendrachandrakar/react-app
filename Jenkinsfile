@@ -1,3 +1,4 @@
+def shortCommit = ''
 node {
   try {
     stage('Checkout') {
@@ -12,18 +13,28 @@ node {
     stage('Build Docker test'){
       sh 'docker build -t react-test -f Dockerfile.test --no-cache . '
     }
-    stage('Docker test'){
+    /*stage('Docker test'){
       sh 'docker run --rm react-test'
     }
-   /* stage('Clean Docker test'){
+   stage('Clean Docker test'){
       sh 'docker rmi react-test'
-    }*/
+    }
     stage('Deploy'){
       if(env.BRANCH_NAME == 'master'){
         sh 'docker build -t react-app --no-cache .'
         sh 'docker tag react-app localhost:5000/react-app'
         sh 'docker push localhost:5000/react-app'
         sh 'docker rmi -f react-app localhost:5000/react-app'
+      }
+    }*/
+    stage('Deploy'){
+      if(env.BRANCH_NAME == 'master'){
+        shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+        sh "echo ${shortCommit}"
+        sh "docker build -t react-app --no-cache ."
+        sh "docker tag react-app localhost:5000/react-app-${shortCommit}"
+        sh "docker push localhost:5000/react-app-${shortCommit}"
+        sh "docker rmi -f react-app localhost:5000/react-app-${shortCommit}"
       }
     }
   }
