@@ -1,5 +1,5 @@
 def shortCommit = ''
-node {
+node ('qa'){
   try {
     stage('Checkout') {
       checkout scm
