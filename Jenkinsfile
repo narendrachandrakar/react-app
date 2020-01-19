@@ -33,7 +33,7 @@ node {
         sh "echo ${shortCommit}"
         sh "docker build -t react-app --no-cache ."
         sh "docker tag react-app localhost:5000/react-app-${shortCommit}"
-        sh "docker push localhost:5000/react-app-${shortCommit}"
+        //sh "docker push localhost:5000/react-app-${shortCommit}"
         sh "docker rmi -f react-app localhost:5000/react-app-${shortCommit}"
       }
     }
